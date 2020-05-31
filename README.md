@@ -1,6 +1,6 @@
-# Discrete Graph Structure Learningfor Forecasting Multiple Time Series
+# Anonymous GitHub
 
-This is a PyTorch implementation of the paper "Discrete Graph Structure Learningfor Forecasting Multiple Time Series".
+This is a PyTorch implementation of the paper "XXX".
 
 ## Installation
 
@@ -28,6 +28,10 @@ The traffic data files for Los Angeles (METR-LA) and the Bay Area (PEMS-BAY) are
 
 Run the following commands to generate train/test/val dataset at  `data/{METR-LA,PEMS-BAY}/{train,val,test}.npz`.
 ```bash
+# Unzip the datasets
+unzip data/metr-la.h5.zip -d data/
+unzip data/pems-bay.h5.zip -d data/
+
 # Create data directories
 mkdir -p data/{METR-LA,PEMS-BAY}
 
