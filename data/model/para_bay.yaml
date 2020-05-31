@@ -37,7 +37,7 @@ train:
   optimizer: adam
   patience: 100
   steps: [20, 30, 40]
-  test_every_n_epochs: 1
+  test_every_n_epochs: 5
   knn_k: 30
   epoch_use_regularization: 150
   num_sample: 10
