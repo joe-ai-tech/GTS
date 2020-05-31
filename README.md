@@ -1,6 +1,6 @@
 # Anonymous GitHub
 
-This is a PyTorch implementation of the paper "XXX".
+This is a PyTorch implementation of the paper "Discrete Graph Structure Learningfor Forecasting Multiple Time Series".
 
 ## Installation
 
