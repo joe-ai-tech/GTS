@@ -47,10 +47,10 @@ python -m scripts.generate_training_data --output_dir=data/PEMS-BAY --traffic_df
 When you train the model, you can run:
 
 ```bash
-# METR-LA
+# Use METR-LA dataset
 python train.py --config_filename=data/model/para_la.yaml --temperature=0.5
 
-# PEMS-BAY
+# Use PEMS-BAY dataset
 python train.py --config_filename=data/model/para_bay.yaml --temperature=0.5
 ```
 
