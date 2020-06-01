@@ -251,12 +251,9 @@ class GTSSupervisor:
 
         for epoch_num in range(self._epoch_num, epochs):
             print("Num of epoch:",epoch_num)
-
             self.GTS_model = self.GTS_model.train()
-
             train_iterator = self._data['train_loader'].get_iterator()
             losses = []
-
             start_time = time.time()
             temp = self.temperature
             gumbel_soft = True
@@ -265,13 +262,12 @@ class GTSSupervisor:
                 label = 'with_regularization'
             else:
                 label = 'without_regularization'
-            print("Label:", label)
 
             for batch_idx, (x, y) in enumerate(train_iterator):
                 optimizer.zero_grad()
                 x, y = self._prepare_data(x, y)
                 output, mid_output = self.GTS_model(label, x, self._train_feas, temp, gumbel_soft, y, batches_seen)
-                if (epoch_num % 30) == 30 - 1:
+                if (epoch_num % epochs) == epochs - 1:
                     output, mid_output = self.GTS_model(label, x, self._train_feas, temp, gumbel_soft, y, batches_seen, self.save_adj_name)
 
                 if batches_seen == 0:
@@ -311,9 +307,7 @@ class GTSSupervisor:
 
             if label == 'without_regularization':
                 val_loss, val_mape, val_rmse = self.evaluate(label, dataset='val', batches_seen=batches_seen, gumbel_soft=gumbel_soft)
-
                 end_time2 = time.time()
-
                 self._writer.add_scalar('training loss',
                                         np.mean(losses),
                                         batches_seen)
@@ -368,7 +362,6 @@ class GTSSupervisor:
                 if wait == patience:
                     self._logger.warning('Early stopping at epoch: %d' % epoch_num)
                     break
-
 
     def _prepare_data(self, x, y):
         x, y = self._get_x_y(x, y)
