@@ -225,53 +225,6 @@ class GTSSupervisor:
             else:
                 return mean_loss
 
-    def save_results(self, label, dataset='test', batches_seen=0, gumbel_soft=True):
-        """
-        Computes mean L1Loss
-        :return: mean L1Loss
-        """
-        with torch.no_grad():
-            self.GTS_model = self.GTS_model.eval()
-            data = {}
-            for category in [dataset]:
-                cat_data = np.load(os.path.join('data/la_time', category + '.npz'))
-                data['time_' + category] = cat_data['time']
-
-            all_data = utils.load_dataset(dataset_dir='data/la_time', batch_size=64, test_batch_size=64)
-            iterator = all_data['{}_loader'.format(dataset)].get_iterator()
-            true_list = []
-            pred_list = []
-
-            for batch_idx, (x, y) in enumerate(iterator):
-
-                x, y = self._prepare_data(x, y)
-                output, mid_output = self.GTS_model(label, x, self._train_feas, 0.5, gumbel_soft)
-
-                if label == 'all':
-                    loss = self._compute_loss(y, output)
-                    y_true = self.standard_scaler.inverse_transform(y)
-                    y_pred = self.standard_scaler.inverse_transform(output)
-                    true_list.append(y_true.cpu().data.numpy())
-                    pred_list.append(y_pred.cpu().data.numpy())
-            output_pred = []
-            output_true = []
-            for i in range(40):
-                for j in range(64):
-                    count = i * 40 + j
-                    for k in range(12):
-                        time = data['time_test'][count][k]
-                        pred_one = list(pred_list[i][k][j])
-                        pred_one.append(time)
-                        true_one = list(true_list[i][k][j])
-                        true_one.append(time)
-                        output_pred.append(pred_one)
-                        output_true.append(true_one)
-
-            output_pred = pd.DataFrame(output_pred)
-            output_true = pd.DataFrame(output_true)
-            output_pred.to_csv('output_pred.csv', sep='\t', index=False)
-            output_true.to_csv('output_true.csv', sep='\t', index=False)
-
 
     def _train(self, base_lr,
                steps, patience=200, epochs=100, lr_decay_ratio=0.1, log_every=1, save_model=0,
@@ -313,8 +266,6 @@ class GTSSupervisor:
             else:
                 label = 'without_regularization'
             print("Label:", label)
-            if (epoch_num % 10) == 10 - 1:
-                self.save_results(label, dataset='test', batches_seen=batches_seen, gumbel_soft=gumbel_soft)
 
             for batch_idx, (x, y) in enumerate(train_iterator):
                 optimizer.zero_grad()
